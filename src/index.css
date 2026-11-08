@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --brand-surface: #eee9df;
+  --brand: #b49a62;
+  --brand-dark: #20352b;
+}
+
+@theme {
+  --color-brand-surface: var(--brand-surface);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+}
+
+/* Custom Sidebar Scrollbar */
+
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--brand) transparent;
+  scroll-behavior: smooth;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: var(--brand);
+  border-radius: 20px;
+  transition: background 0.3s ease;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-dark);
+}
+@font-face {
+  font-family: "Vazirmatn[wght]";
+  src: url(public/fonts/Vazirmatn-VariableFont_wght.ttf) format("truetype");
+}
+*{
+  font-family: "Vazirmatn[wght]", sans-serif;
+}
