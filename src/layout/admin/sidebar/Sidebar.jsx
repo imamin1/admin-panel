@@ -19,7 +19,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-export default function Sidebar({ isOpen, onClose }) {
+export default function Sidebar({ isOpen, onClose, onNavigate }) {
   const [active, setActive] = useState("dashboard_section");
 
   const groups = [
@@ -89,6 +89,7 @@ export default function Sidebar({ isOpen, onClose }) {
       type="button"
       onClick={() => {
         setActive(id);
+        onNavigate(id);
         onClose();
       }}
       className={`group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200
