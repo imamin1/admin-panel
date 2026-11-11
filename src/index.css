@@ -4,12 +4,88 @@
   --brand-surface: #eee9df;
   --brand: #b49a62;
   --brand-dark: #20352b;
+  --app-background: #f6f5f1;
+  --app-panel: #ffffff;
+  --app-text: #20352b;
+  --app-muted: #6b7280;
+  --app-border: #e5e7eb;
+}
+
+:root[data-theme="dark"] {
+  --brand-surface: #29352d;
+  --brand: #d0b36e;
+  --brand-dark: #16231b;
+  --app-background: #111813;
+  --app-panel: #1b251e;
+  --app-text: #e7ece7;
+  --app-muted: #a7b3a9;
+  --app-border: #34443a;
+  color-scheme: dark;
 }
 
 @theme {
   --color-brand-surface: var(--brand-surface);
   --color-brand: var(--brand);
   --color-brand-dark: var(--brand-dark);
+  --color-app-background: var(--app-background);
+  --color-app-panel: var(--app-panel);
+  --color-app-text: var(--app-text);
+  --color-app-muted: var(--app-muted);
+  --color-app-border: var(--app-border);
+}
+
+:root[data-theme="dark"] .bg-white {
+  background-color: var(--app-panel);
+}
+
+:root[data-theme="dark"] .theme-content [class*="text-brand-dark"],
+:root[data-theme="dark"] .theme-content [class*="text-gray-950"],
+:root[data-theme="dark"] .theme-content [class*="text-gray-900"],
+:root[data-theme="dark"] .theme-content [class*="text-gray-800"] {
+  color: var(--app-text);
+}
+
+:root[data-theme="dark"] .theme-content [class*="text-gray-700"],
+:root[data-theme="dark"] .theme-content [class*="text-gray-600"],
+:root[data-theme="dark"] .theme-content [class*="text-gray-500"] {
+  color: var(--app-muted);
+}
+
+:root[data-theme="dark"] .theme-content [class~="bg-white"] {
+  background-color: var(--app-panel);
+}
+
+:root[data-theme="dark"] .theme-content [class~="bg-gray-100"] {
+  background-color: var(--brand-surface);
+}
+
+:root[data-theme="dark"] .theme-content [class~="bg-emerald-100"] {
+  background-color: #164b3a;
+}
+
+:root[data-theme="dark"] .theme-content [class~="text-emerald-800"],
+:root[data-theme="dark"] .theme-content [class~="text-emerald-700"] {
+  color: #a7f3d0;
+}
+
+:root[data-theme="dark"] .theme-content [class~="text-red-600"] {
+  color: #fca5a5;
+}
+
+:root[data-theme="dark"] .theme-content [class~="text-amber-600"] {
+  color: #fcd34d;
+}
+
+:root[data-theme="dark"] .theme-content [class~="hover:bg-red-50"]:hover {
+  background-color: #452626;
+}
+
+:root[data-theme="dark"] .theme-content [class~="hover:bg-amber-50"]:hover {
+  background-color: #493b20;
+}
+
+:root[data-theme="dark"] .theme-content thead.bg-brand-dark {
+  color: var(--app-text);
 }
 
 /* Custom Sidebar Scrollbar */

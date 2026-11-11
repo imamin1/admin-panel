@@ -4,7 +4,10 @@ import ProductSalesChart from "../../../pages/Dashboard/ProductSalesChart";
 
 export default function Content({ children }) {
   return (
-    <main dir="rtl" className="min-w-0 p-4 sm:p-6 lg:p-8">
+    <main
+      dir="rtl"
+      className="theme-content min-w-0 p-4 text-app-text sm:p-6 lg:p-8"
+    >
       {children || (
         <div id="dashboard_section" className="space-y-8">
           <DashboardCards />

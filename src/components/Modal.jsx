@@ -55,7 +55,7 @@ export default function Modal({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex h-dvh w-full flex-col bg-white">
+    <div className="theme-content fixed inset-0 z-[100] flex h-dvh w-full flex-col bg-app-panel text-app-text">
       <form
         ref={formRef}
         role="dialog"
