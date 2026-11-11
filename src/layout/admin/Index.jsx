@@ -5,6 +5,10 @@ import Navbar from "./navbar/Navbar";
 import Content from "./content/Content";
 import Category from "../../pages/Category/Category";
 import Product from "../../pages/Product/Product";
+import Color from "../../pages/Color/Color";
+import Guarantee from "../../pages/Guarantee/Guarantee";
+import Brand from "../../pages/Brand/Brand";
+import Discount from "../../pages/Discount/Discount";
 
 export default function Index({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,6 +20,14 @@ export default function Index({ children }) {
       <Category />
     ) : activeSection === "manage_product_section" ? (
       <Product />
+    ) : activeSection === "manage_guarantee_section" ? (
+      <Guarantee />
+    ) : activeSection === "manage_brand_section" ? (
+      <Brand />
+    ) : activeSection === "manage_color_section" ? (
+      <Color />
+    ) : activeSection === "manage_discount_section" ? (
+      <Discount />
     ) : undefined);
 
   return (
