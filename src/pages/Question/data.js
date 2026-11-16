@@ -1,4 +1,4 @@
-const questionConfig = {
+export default {
   title: "مدیریت پرسش‌ها",
   itemLabel: "پرسش",
   searchPlaceholder: "نام کاربر، دسته یا متن پرسش را جست‌وجو کنید",
@@ -35,5 +35,3 @@ const questionConfig = {
     },
   ],
 };
-
-export default questionConfig;

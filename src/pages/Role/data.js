@@ -1,4 +1,4 @@
-const roleConfig = {
+export default {
   title: "مدیریت نقش‌ها",
   itemLabel: "نقش",
   searchPlaceholder: "عنوان نقش را جست‌وجو کنید",
@@ -34,5 +34,3 @@ const roleConfig = {
     },
   ],
 };
-
-export default roleConfig;

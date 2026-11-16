@@ -22,9 +22,8 @@ export default function ManagementFormModal({
     ),
   );
 
-  const updateField = (key, value) => {
+  const updateField = (key, value) =>
     setValues((current) => ({ ...current, [key]: value }));
-  };
 
   return (
     <Modal

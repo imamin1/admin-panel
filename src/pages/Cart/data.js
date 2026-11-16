@@ -1,4 +1,4 @@
-const cartConfig = {
+export default {
   title: "مدیریت سبدهای خرید",
   itemLabel: "سبد خرید",
   searchPlaceholder: "نام مشتری یا شماره سبد را جست‌وجو کنید",
@@ -32,5 +32,3 @@ const cartConfig = {
     },
   ],
 };
-
-export default cartConfig;

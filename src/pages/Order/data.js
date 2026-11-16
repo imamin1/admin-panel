@@ -1,4 +1,4 @@
-const orderConfig = {
+export default {
   title: "مدیریت سفارشات",
   itemLabel: "سفارش",
   searchPlaceholder: "نام کاربر یا شماره سفارش را جست‌وجو کنید",
@@ -32,5 +32,3 @@ const orderConfig = {
     },
   ],
 };
-
-export default orderConfig;

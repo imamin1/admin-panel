@@ -42,18 +42,6 @@ export default function useManagementRecords(config) {
     closeForm();
   };
 
-  const deleteRecord = (id) => {
-    setRecords((current) => current.filter((record) => record.id !== id));
-  };
-
-  const updateRecord = (id, changes) => {
-    setRecords((current) =>
-      current.map((record) =>
-        record.id === id ? { ...record, ...changes } : record,
-      ),
-    );
-  };
-
   return {
     records: filteredRecords,
     search,
@@ -70,7 +58,13 @@ export default function useManagementRecords(config) {
     },
     closeForm,
     saveRecord,
-    deleteRecord,
-    updateRecord,
+    deleteRecord: (id) =>
+      setRecords((current) => current.filter((record) => record.id !== id)),
+    updateRecord: (id, changes) =>
+      setRecords((current) =>
+        current.map((record) =>
+          record.id === id ? { ...record, ...changes } : record,
+        ),
+      ),
   };
 }

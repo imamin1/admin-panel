@@ -6,7 +6,7 @@ export default function Navbar({ onMenuClick, theme, onThemeToggle }) {
   return (
     <header
       dir="rtl"
-      className="z-30 flex h-20 shrink-0 items-center justify-between border-b border-app-border bg-app-panel/80 px-4 text-app-text backdrop-blur-xl transition-colors sm:px-6 lg:px-8"
+      className="z-30 flex h-20 shrink-0 items-center justify-between border-b border-app-border bg-app-panel/80 px-4 text-app-text backdrop-blur-xl sm:px-6 lg:px-8"
     >
       <div className="flex items-center gap-3">
         <button

@@ -18,7 +18,7 @@ import Permission from "../../pages/Permission/Permission";
 import Comment from "../../pages/Comment/Comment";
 import Question from "../../pages/Question/Question";
 
-export default function Index({ children }) {
+export default function AdminLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard_section");
   const [theme, setTheme] = useState(() => {
@@ -69,7 +69,7 @@ export default function Index({ children }) {
   return (
     <div
       dir="rtl"
-      className="flex h-dvh w-full overflow-hidden bg-app-background text-app-text transition-colors"
+      className="flex h-dvh w-full overflow-hidden bg-app-background text-app-text"
     >
       {isSidebarOpen && (
         <button

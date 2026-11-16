@@ -4,9 +4,7 @@ export function formatValue(value, format) {
       ? new Date(`${value}T00:00:00`).toLocaleDateString("fa-IR")
       : "—";
   }
-  if (format === "money") {
-    return `${Number(value).toLocaleString("fa-IR")} تومان`;
-  }
+  if (format === "money") return `${Number(value).toLocaleString("fa-IR")} تومان`;
   if (format === "list") {
     return Array.isArray(value) && value.length ? value.join("، ") : "—";
   }

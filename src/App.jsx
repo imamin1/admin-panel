@@ -1,8 +1,13 @@
-import Index from "./layout/admin/Index";
-
+// import Index from "./layout/admin/AdminLayout";
+import AuthLayout from "./layout/auth/AuthLayout";
 
 function App() {
-  return <Index />;
+  return (
+    <>
+  {/* <Index /> */}
+    <AuthLayout/>
+    </>
+);
 }
 
 export default App;

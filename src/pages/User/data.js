@@ -1,4 +1,4 @@
-const userConfig = {
+export default {
   title: "مدیریت کاربران",
   itemLabel: "کاربر",
   searchPlaceholder: "نام، شماره موبایل یا ایمیل را جست‌وجو کنید",
@@ -32,5 +32,3 @@ const userConfig = {
     },
   ],
 };
-
-export default userConfig;

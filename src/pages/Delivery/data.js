@@ -1,4 +1,4 @@
-const deliveryConfig = {
+export default {
   title: "مدیریت روش‌های ارسال",
   itemLabel: "روش ارسال",
   searchPlaceholder: "عنوان روش ارسال را جست‌وجو کنید",
@@ -23,5 +23,3 @@ const deliveryConfig = {
     { id: 1, title: "پست پیشتاز", cost: 25000, duration: 2, unit: "روز" },
   ],
 };
-
-export default deliveryConfig;

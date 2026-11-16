@@ -1,4 +1,4 @@
-const commentConfig = {
+export default {
   title: "مدیریت نظرات",
   itemLabel: "نظر",
   searchPlaceholder: "نام کاربر، محصول یا متن نظر را جست‌وجو کنید",
@@ -35,5 +35,3 @@ const commentConfig = {
     },
   ],
 };
-
-export default commentConfig;

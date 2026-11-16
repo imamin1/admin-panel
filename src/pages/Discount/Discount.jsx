@@ -136,23 +136,13 @@ export default function Discount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredDiscounts = useMemo(() => {
-    const normalizedSearch = search.trim().toLocaleLowerCase();
+    const query = search.trim().toLocaleLowerCase();
     return discounts.filter(
       (discount) =>
-        discount.title.toLocaleLowerCase().includes(normalizedSearch) ||
-        discount.code.toLocaleLowerCase().includes(normalizedSearch),
+        discount.title.toLocaleLowerCase().includes(query) ||
+        discount.code.toLocaleLowerCase().includes(query),
     );
   }, [discounts, search]);
-
-  const openAddModal = () => {
-    setEditingDiscount(null);
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (discount) => {
-    setEditingDiscount(discount);
-    setIsModalOpen(true);
-  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -179,19 +169,13 @@ export default function Discount() {
 
   return (
     <section dir="rtl" className="space-y-5">
-      <header>
-        <h1 className="text-center text-xl font-bold text-brand-dark sm:text-2xl">
-          مدیریت کدهای تخفیف
-        </h1>
-      </header>
+      <h1 className="text-center text-xl font-bold text-brand-dark sm:text-2xl">
+        مدیریت کدهای تخفیف
+      </h1>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <label className="flex min-w-0 items-center gap-2 rounded-xl border border-brand/20 bg-white px-3 py-2 sm:w-96">
-          <Search
-            size={18}
-            className="shrink-0 text-brand-dark/60"
-            aria-hidden="true"
-          />
+          <Search size={18} className="shrink-0 text-brand-dark/60" aria-hidden="true" />
           <input
             type="search"
             value={search}
@@ -203,7 +187,10 @@ export default function Discount() {
 
         <button
           type="button"
-          onClick={openAddModal}
+          onClick={() => {
+            setEditingDiscount(null);
+            setIsModalOpen(true);
+          }}
           aria-haspopup="dialog"
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-dark px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark/90"
         >
@@ -226,7 +213,7 @@ export default function Discount() {
             </tr>
           </thead>
           <tbody className="divide-y divide-brand/15">
-            {filteredDiscounts.length > 0 ? (
+            {filteredDiscounts.length ? (
               filteredDiscounts.map((discount, index) => (
                 <tr
                   key={discount.id}
@@ -235,9 +222,7 @@ export default function Discount() {
                   <td className="whitespace-nowrap px-3 py-3">
                     {(index + 1).toLocaleString("fa-IR")}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {discount.title}
-                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">{discount.title}</td>
                   <td dir="ltr" className="whitespace-nowrap px-3 py-3 font-medium">
                     {discount.code}
                   </td>
@@ -245,17 +230,16 @@ export default function Discount() {
                     {discount.percentage.toLocaleString("fa-IR")}٪
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {new Date(`${discount.expiresAt}T00:00:00`).toLocaleDateString(
-                      "fa-IR",
-                    )}
+                    {new Date(`${discount.expiresAt}T00:00:00`).toLocaleDateString("fa-IR")}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {discount.appliesTo}
-                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">{discount.appliesTo}</td>
                   <td className="whitespace-nowrap px-3 py-3">
                     <button
                       type="button"
-                      onClick={() => openEditModal(discount)}
+                      onClick={() => {
+                        setEditingDiscount(discount);
+                        setIsModalOpen(true);
+                      }}
                       aria-label={`ویرایش کد ${discount.code}`}
                       title="ویرایش کد"
                       className="mx-1 inline-flex rounded-lg p-2 text-amber-600 transition hover:bg-amber-50"

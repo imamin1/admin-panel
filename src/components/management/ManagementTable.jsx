@@ -5,13 +5,12 @@ export default function ManagementTable({
   columns,
   records,
   emptyMessage,
+  itemLabel,
   onEdit,
   onDelete,
   onUpdate,
-  itemLabel,
 }) {
   const hasActions = Boolean(onEdit || onDelete);
-  const columnCount = columns.length + 1 + Number(hasActions);
 
   return (
     <div className="overflow-x-auto rounded-xl border border-brand/20 bg-white">
@@ -24,9 +23,7 @@ export default function ManagementTable({
                 {column.label}
               </th>
             ))}
-            {hasActions && (
-              <th scope="col" className="px-3 py-3">عملیات</th>
-            )}
+            {hasActions && <th scope="col" className="px-3 py-3">عملیات</th>}
           </tr>
         </thead>
         <tbody className="divide-y divide-brand/15">
@@ -54,9 +51,7 @@ export default function ManagementTable({
                           aria-label={`تغییر وضعیت ${record.title ?? record.name ?? column.label}`}
                           className="h-4 w-4 accent-brand-dark"
                         />
-                        <span>
-                          {record[column.key] ? "فعال" : "غیرفعال"}
-                        </span>
+                        <span>{record[column.key] ? "فعال" : "غیرفعال"}</span>
                       </label>
                     ) : (
                       <span className="block max-w-72 whitespace-normal">
@@ -95,7 +90,10 @@ export default function ManagementTable({
             ))
           ) : (
             <tr>
-              <td colSpan={columnCount} className="px-3 py-8 text-brand-dark/60">
+              <td
+                colSpan={columns.length + 1 + Number(hasActions)}
+                className="px-3 py-8 text-brand-dark/60"
+              >
                 {emptyMessage}
               </td>
             </tr>

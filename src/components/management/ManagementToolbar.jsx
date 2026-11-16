@@ -10,11 +10,7 @@ export default function ManagementToolbar({
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <label className="flex min-w-0 items-center gap-2 rounded-xl border border-brand/20 bg-white px-3 py-2 sm:w-96">
-        <Search
-          size={18}
-          className="shrink-0 text-brand-dark/60"
-          aria-hidden="true"
-        />
+        <Search size={18} className="shrink-0 text-brand-dark/60" aria-hidden="true" />
         <input
           type="search"
           value={search}

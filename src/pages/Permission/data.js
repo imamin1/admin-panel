@@ -1,11 +1,10 @@
-const permissionConfig = {
+export default {
   title: "مدیریت مجوزها",
   itemLabel: "مجوز",
   searchPlaceholder: "عنوان یا توضیحات مجوز را جست‌وجو کنید",
   canCreate: false,
   canEdit: false,
   canDelete: false,
-  fields: [],
   columns: [
     { key: "title", label: "عنوان" },
     { key: "description", label: "توضیحات" },
@@ -32,5 +31,3 @@ const permissionConfig = {
     },
   ],
 };
-
-export default permissionConfig;

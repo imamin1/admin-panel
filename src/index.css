@@ -34,8 +34,10 @@
   --color-app-border: var(--app-border);
 }
 
-:root[data-theme="dark"] .bg-white {
-  background-color: var(--app-panel);
+:root,
+body {
+  background-color: var(--app-background);
+  color: var(--app-text);
 }
 
 :root[data-theme="dark"] .theme-content [class*="text-brand-dark"],
