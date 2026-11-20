@@ -25,6 +25,11 @@ export default function Delivery() {
         onEdit={page.openEditForm}
         onDelete={page.deleteRecord}
         onUpdate={page.updateRecord}
+        loading={page.isLoading}
+        error={page.error}
+        notice={page.notice}
+        pagination={page.pagination}
+        onPageChange={page.setPage}
       />
       {page.isFormOpen && (
         <ManagementFormModal

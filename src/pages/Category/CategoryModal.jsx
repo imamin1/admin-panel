@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import Modal from "../../components/Modal";
+import { getApiErrorMessage } from "../../api";
+import { uploadAdminImage } from "../../services/admin-records.service";
 
 export default function CategoryModal({
   category,
@@ -12,20 +14,33 @@ export default function CategoryModal({
   const [description, setDescription] = useState(category?.description ?? "");
   const [image, setImage] = useState(null);
   const [isActive, setIsActive] = useState(category?.isActive ?? true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const titleInputRef = useRef(null);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const normalizedTitle = title.trim();
     if (!normalizedTitle) return;
 
-    onSave({
-      parentId: parentId === "" ? null : Number(parentId),
-      title: normalizedTitle,
-      description: description.trim(),
-      imageName: image?.name ?? category?.imageName ?? "",
-      isActive,
-    });
+    setIsSaving(true);
+    setSaveError("");
+    try {
+      const uploadedImage = image ? await uploadAdminImage(image) : null;
+      const saved = await onSave({
+        parentId: parentId === "" ? null : Number(parentId),
+        title: normalizedTitle,
+        description: description.trim(),
+        imageName: uploadedImage?.name ?? category?.imageName ?? "",
+        imageUrl: uploadedImage?.url ?? category?.imageUrl ?? "",
+        isActive,
+      });
+      if (!saved) setSaveError("ذخیره انجام نشد. خطای نمایش‌داده‌شده در صفحه را بررسی کنید.");
+    } catch (error) {
+      setSaveError(getApiErrorMessage(error));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -110,6 +125,8 @@ export default function CategoryModal({
         />
         وضعیت فعال
       </label>
+      {saveError && <p role="alert" className="text-sm text-red-700">{saveError}</p>}
+      {isSaving && <p role="status" className="text-sm text-brand-dark/70">در حال ذخیره...</p>}
     </Modal>
   );
 }

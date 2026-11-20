@@ -1,10 +1,16 @@
 export default {
+  resource: "permissions",
   title: "مدیریت مجوزها",
   itemLabel: "مجوز",
   searchPlaceholder: "عنوان یا توضیحات مجوز را جست‌وجو کنید",
-  canCreate: false,
-  canEdit: false,
-  canDelete: false,
+  canCreate: true,
+  canEdit: true,
+  canDelete: true,
+  fields: [
+    { key: "title", label: "عنوان مجوز" },
+    { key: "description", label: "توضیحات", type: "textarea" },
+    { key: "isActive", label: "وضعیت فعال", type: "checkbox" },
+  ],
   columns: [
     { key: "title", label: "عنوان" },
     { key: "description", label: "توضیحات" },

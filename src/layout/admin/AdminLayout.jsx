@@ -1,22 +1,22 @@
 
-import { useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import Sidebar from "./sidebar/Sidebar";
 import Navbar from "./navbar/Navbar";
 import Content from "./content/Content";
-import Category from "../../pages/Category/Category";
-import Product from "../../pages/Product/Product";
-import Color from "../../pages/Color/Color";
-import Guarantee from "../../pages/Guarantee/Guarantee";
-import Brand from "../../pages/Brand/Brand";
-import Discount from "../../pages/Discount/Discount";
-import Cart from "../../pages/Cart/Cart";
-import Order from "../../pages/Order/Order";
-import Delivery from "../../pages/Delivery/Delivery";
-import User from "../../pages/User/User";
-import Role from "../../pages/Role/Role";
-import Permission from "../../pages/Permission/Permission";
-import Comment from "../../pages/Comment/Comment";
-import Question from "../../pages/Question/Question";
+const Category = lazy(() => import("../../pages/Category/Category"));
+const Product = lazy(() => import("../../pages/Product/Product"));
+const Color = lazy(() => import("../../pages/Color/Color"));
+const Guarantee = lazy(() => import("../../pages/Guarantee/Guarantee"));
+const Brand = lazy(() => import("../../pages/Brand/Brand"));
+const Discount = lazy(() => import("../../pages/Discount/Discount"));
+const Cart = lazy(() => import("../../pages/Cart/Cart"));
+const Order = lazy(() => import("../../pages/Order/Order"));
+const Delivery = lazy(() => import("../../pages/Delivery/Delivery"));
+const User = lazy(() => import("../../pages/User/User"));
+const Role = lazy(() => import("../../pages/Role/Role"));
+const Permission = lazy(() => import("../../pages/Permission/Permission"));
+const Comment = lazy(() => import("../../pages/Comment/Comment"));
+const Question = lazy(() => import("../../pages/Question/Question"));
 
 export default function AdminLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

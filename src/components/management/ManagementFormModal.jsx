@@ -17,10 +17,12 @@ export default function ManagementFormModal({
             ? true
             : field.type === "multiselect"
               ? []
-              : ""),
+              : field.defaultValue ?? (field.type === "color" ? "#563d7c" : "")),
       ]),
     ),
   );
+  const [saveError, setSaveError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   const updateField = (key, value) =>
     setValues((current) => ({ ...current, [key]: value }));
@@ -31,7 +33,14 @@ export default function ManagementFormModal({
       onClose={onClose}
       onSubmit={(event) => {
         event.preventDefault();
-        onSave(values);
+        setSaveError("");
+        setIsSaving(true);
+        Promise.resolve(onSave(values))
+          .then((saved) => {
+            if (saved === false) setSaveError("ذخیره انجام نشد. خطای نمایش‌داده‌شده را بررسی کنید.");
+          })
+          .catch((error) => setSaveError(error.message))
+          .finally(() => setIsSaving(false));
       }}
     >
       {fields.map((field) => (
@@ -42,7 +51,7 @@ export default function ManagementFormModal({
           <span>{field.label}</span>
           {field.type === "textarea" ? (
             <textarea
-              required
+              required={field.required !== false}
               rows={4}
               value={values[field.key]}
               onChange={(event) => updateField(field.key, event.target.value)}
@@ -62,7 +71,7 @@ export default function ManagementFormModal({
             </span>
           ) : field.type === "select" || field.type === "multiselect" ? (
             <select
-              required={field.type === "select"}
+              required={field.type === "select" && field.required !== false}
               multiple={field.type === "multiselect"}
               value={values[field.key]}
               onChange={(event) =>
@@ -87,7 +96,7 @@ export default function ManagementFormModal({
             </select>
           ) : (
             <input
-              required
+              required={field.required !== false}
               type={field.type ?? "text"}
               min={field.min}
               value={values[field.key]}
@@ -97,6 +106,8 @@ export default function ManagementFormModal({
           )}
         </label>
       ))}
+      {saveError && <p role="alert" className="text-sm text-red-700">{saveError}</p>}
+      {isSaving && <p role="status" className="text-sm text-brand-dark/70">در حال ذخیره...</p>}
     </Modal>
   );
 }

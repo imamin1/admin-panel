@@ -1,66 +1,60 @@
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { getApiErrorMessage } from "../../api";
+import useManagementRecords from "../../components/management/useManagementRecords";
+import { listAdminRecords } from "../../services/admin-records.service";
 import ProductAttributesModal from "./components/ProductAttributesModal";
 import ProductFormModal from "./components/ProductFormModal";
 import ProductTable from "./components/ProductTable";
-import { initialProducts, productCategories } from "./data";
+
+const config = {
+  resource: "products",
+  columns: [{ key: "title", label: "عنوان" }],
+};
+
+const emptyCatalogs = { categories: [], brands: [], colors: [], warranties: [] };
 
 export default function Product() {
-  const [products, setProducts] = useState(initialProducts);
-  const [search, setSearch] = useState("");
+  const page = useManagementRecords(config);
+  const [catalogs, setCatalogs] = useState(emptyCatalogs);
+  const [catalogError, setCatalogError] = useState("");
   const [editingProductId, setEditingProductId] = useState(null);
   const [attributesProductId, setAttributesProductId] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const filteredProducts = useMemo(() => {
-    const normalizedSearch = search.trim().toLocaleLowerCase();
-    return products.filter((product) =>
-      product.title.toLocaleLowerCase().includes(normalizedSearch),
-    );
-  }, [products, search]);
+  useEffect(() => {
+    const controller = new AbortController();
+    const loadCatalogs = async () => {
+      try {
+        const [categories, brands, colors, guarantees] = await Promise.all(
+          ["categories", "brands", "colors", "guarantees"].map((resource) =>
+            listAdminRecords(resource, {
+              page: 1,
+              perPage: 100,
+              search: "",
+              signal: controller.signal,
+            }),
+          ),
+        );
+        setCatalogs({
+          categories: categories.data,
+          brands: brands.data.map((brand) => brand.persianTitle),
+          colors: colors.data.map((color) => ({
+            name: color.title,
+            value: color.value,
+          })),
+          warranties: guarantees.data.map((guarantee) => guarantee.title),
+        });
+      } catch (error) {
+        if (error.name !== "CanceledError") setCatalogError(getApiErrorMessage(error));
+      }
+    };
 
-  const openCreateForm = () => {
-    setEditingProductId(null);
-    setIsFormOpen(true);
-  };
+    loadCatalogs();
+    return () => controller.abort();
+  }, []);
 
-  const openEditForm = (product) => {
-    setEditingProductId(product.id);
-    setIsFormOpen(true);
-  };
-
-  const saveProduct = (productData) => {
-    if (editingProductId === null) {
-      setProducts((current) => [
-        ...current,
-        { id: Date.now(), ...productData },
-      ]);
-    } else {
-      setProducts((current) =>
-        current.map((product) =>
-          product.id === editingProductId
-            ? { ...product, ...productData }
-            : product,
-        ),
-      );
-    }
-    setIsFormOpen(false);
-    setEditingProductId(null);
-  };
-
-  const saveAttributeValues = (attributeValues) => {
-    setProducts((current) =>
-      current.map((product) =>
-        product.id === attributesProductId
-          ? { ...product, attributeValues }
-          : product,
-      ),
-    );
-    setAttributesProductId(null);
-  };
-
-  const deleteProduct = (id) => {
-    setProducts((current) => current.filter((product) => product.id !== id));
-  };
+  const products = page.records;
+  const filteredProducts = products;
 
   const editingProduct =
     products.find((product) => product.id === editingProductId) ?? null;
@@ -69,37 +63,85 @@ export default function Product() {
 
   return (
     <>
+      {catalogError && (
+        <p role="alert" className="mb-4 text-sm text-red-700">{catalogError}</p>
+      )}
       <ProductTable
         products={filteredProducts}
-        categories={productCategories}
-        search={search}
-        onSearchChange={setSearch}
-        onCreate={openCreateForm}
-        onEdit={openEditForm}
+        categories={catalogs.categories}
+        search={page.search}
+        loading={page.isLoading}
+        page={page.page}
+        perPage={page.pagination.per_page}
+        onSearchChange={(search) => {
+          page.setSearch(search);
+          page.setPage(1);
+        }}
+        onCreate={() => {
+          page.openCreateForm();
+          setEditingProductId(null);
+          setIsFormOpen(true);
+        }}
+        onEdit={(product) => {
+          page.openEditForm(product);
+          setEditingProductId(product.id);
+          setIsFormOpen(true);
+        }}
         onEditAttributes={(product) => setAttributesProductId(product.id)}
-        onDelete={deleteProduct}
+        onDelete={page.deleteRecord}
       />
-
+      {page.isLoading && products.length === 0 && (
+        <p role="status" className="mt-4 text-center text-sm text-brand-dark/70">در حال دریافت محصولات...</p>
+      )}
+      {(page.error || page.notice || page.pagination.last_page > 1) && (
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-brand/20 bg-white px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <div aria-live="polite">
+            {page.error && <p className="text-red-700">{page.error}</p>}
+            {!page.error && page.notice && <p className="text-emerald-700">{page.notice}</p>}
+          </div>
+          {page.pagination.last_page > 1 && (
+            <nav aria-label="صفحه‌بندی محصولات" className="flex items-center justify-center gap-3">
+              <button type="button" disabled={page.isLoading || page.page <= 1} onClick={() => page.setPage(page.page - 1)} className="rounded-lg border border-brand/20 px-3 py-1.5 disabled:opacity-50">قبلی</button>
+              <span>{page.page.toLocaleString("fa-IR")} / {page.pagination.last_page.toLocaleString("fa-IR")}</span>
+              <button type="button" disabled={page.isLoading || page.page >= page.pagination.last_page} onClick={() => page.setPage(page.page + 1)} className="rounded-lg border border-brand/20 px-3 py-1.5 disabled:opacity-50">بعدی</button>
+            </nav>
+          )}
+        </div>
+      )}
       {isFormOpen && (
         <ProductFormModal
           key={editingProduct?.id ?? "new-product"}
           product={editingProduct}
-          categories={productCategories}
+          categories={catalogs.categories}
+          brands={catalogs.brands}
+          colors={catalogs.colors}
+          warranties={catalogs.warranties}
           onClose={() => {
+            page.closeForm();
             setIsFormOpen(false);
             setEditingProductId(null);
           }}
-          onSave={saveProduct}
+          onSave={async (data) => {
+            const saved = await page.saveRecord(data);
+            if (saved) {
+              setIsFormOpen(false);
+              setEditingProductId(null);
+            }
+            return saved;
+          }}
         />
       )}
-
       {attributesProduct && (
         <ProductAttributesModal
           key={attributesProduct.id}
           product={attributesProduct}
-          categories={productCategories}
+          categories={catalogs.categories}
           onClose={() => setAttributesProductId(null)}
-          onSave={saveAttributeValues}
+          onSave={async (attributeValues) => {
+            const saved = await page.updateRecord(attributesProduct.id, { attributeValues });
+            if (saved) setAttributesProductId(null);
+            return saved;
+          }}
         />
       )}
     </>

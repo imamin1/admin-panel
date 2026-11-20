@@ -1,11 +1,12 @@
 export default {
+  resource: "carts",
   title: "مدیریت سبدهای خرید",
   itemLabel: "سبد خرید",
   searchPlaceholder: "نام مشتری یا شماره سبد را جست‌وجو کنید",
   fields: [
     { key: "customerId", label: "شناسه مشتری", type: "number", min: 1 },
     { key: "customer", label: "نام مشتری" },
-    { key: "customerPhone", label: "شماره تماس نمایشی", type: "tel" },
+    { key: "customerPhone", label: "شماره تماس نمایشی", type: "tel", required: false },
     { key: "date", label: "تاریخ", type: "date" },
     { key: "total", label: "مبلغ کل (تومان)", type: "number", min: 0 },
     {

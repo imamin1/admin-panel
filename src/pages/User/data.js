@@ -1,18 +1,18 @@
 export default {
+  resource: "users",
   title: "مدیریت کاربران",
   itemLabel: "کاربر",
   searchPlaceholder: "نام، شماره موبایل یا ایمیل را جست‌وجو کنید",
   fields: [
     { key: "name", label: "نام و نام خانوادگی" },
     { key: "mobile", label: "شماره موبایل", type: "tel" },
-    { key: "email", label: "ایمیل", type: "email" },
+    { key: "email", label: "ایمیل", type: "email", required: false },
     {
       key: "role",
       label: "نقش",
       type: "select",
       options: ["کاربر", "مدیر", "نویسنده"],
     },
-    { key: "registeredAt", label: "تاریخ ثبت‌نام", type: "date" },
   ],
   columns: [
     { key: "name", label: "نام و نام خانوادگی" },

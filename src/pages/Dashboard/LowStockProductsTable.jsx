@@ -1,12 +1,4 @@
-const lowStockProducts = [
-  { category: "لوازم جانبی دیجیتال", title: "هدفون بی‌سیم انکر مدل Soundcore Q20i", status: "رو به اتمام - ۳" },
-  { category: "خانه و آشپزخانه", title: "ماگ استیل دوجداره ۴۵۰ میلی‌لیتری", status: "رو به اتمام - ۲" },
-  { category: "لوازم جانبی دیجیتال", title: "کابل USB-C یک‌متری باسئوس", status: "پایان یافته" },
-  { category: "کتاب و لوازم‌التحریر", title: "دفتر یادداشت جلد سخت", status: "رو به اتمام - ۴" },
-  { category: "خانه و آشپزخانه", title: "بطری آب استیل ۷۵۰ میلی‌لیتری", status: "پایان یافته" },
-];
-
-export default function LowStockProductsTable() {
+export default function LowStockProductsTable({ products, loading }) {
   return (
     <section className="min-w-0">
       <h2 className="mb-3 text-center font-semibold text-brand-dark">
@@ -19,29 +11,24 @@ export default function LowStockProductsTable() {
               <th scope="col" className="px-3 py-3">#</th>
               <th scope="col" className="px-3 py-3">دسته</th>
               <th scope="col" className="px-3 py-3">عنوان</th>
-              <th scope="col" className="px-3 py-3">وضعیت</th>
-              <th scope="col" className="px-3 py-3">عملیات</th>
+              <th scope="col" className="px-3 py-3">موجودی</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-brand/15">
-            {lowStockProducts.map((product, index) => (
-              <tr
-                key={`${product.title}-${index}`}
-                className="transition-colors hover:bg-brand-surface/50"
-              >
-                <td className="whitespace-nowrap px-3 py-3">{index + 1}</td>
-                <td className="whitespace-nowrap px-3 py-3">{product.category}</td>
-                <td className="whitespace-nowrap px-3 py-3">{product.title}</td>
-                <td className="whitespace-nowrap px-3 py-3">{product.status}</td>
-                <td className="px-3 py-3">
-                  <i
-                    aria-label="نادیده گرفتن"
-                    className="fas fa-times mx-1 cursor-pointer text-brand hover:text-brand-dark"
-                    title="نادیده گرفتن"
-                  />
+            {products.length ? products.map((product, index) => (
+              <tr key={product.id} className="transition-colors hover:bg-brand-surface/50">
+                <td className="whitespace-nowrap px-3 py-3">{(index + 1).toLocaleString("fa-IR")}</td>
+                <td className="whitespace-nowrap px-3 py-3">{product.categories.join("، ") || "—"}</td>
+                <td className="px-3 py-3">{product.title}</td>
+                <td className="whitespace-nowrap px-3 py-3">{product.stock.toLocaleString("fa-IR")}</td>
+              </tr>
+            )) : (
+              <tr>
+                <td colSpan={4} className="px-3 py-8 text-brand-dark/60">
+                  {loading ? "در حال دریافت اطلاعات..." : "محصول کم‌موجودی وجود ندارد."}
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

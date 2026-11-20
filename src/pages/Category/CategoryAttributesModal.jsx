@@ -10,6 +10,8 @@ export default function CategoryAttributesModal({ category, onClose, onSave }) {
   const [title, setTitle] = useState("");
   const [unit, setUnit] = useState("");
   const [showInFilter, setShowInFilter] = useState(true);
+  const [saveError, setSaveError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const titleInputRef = useRef(null);
 
   const filteredAttributes = useMemo(() => {
@@ -80,7 +82,7 @@ export default function CategoryAttributesModal({ category, onClose, onSave }) {
     );
   };
 
-  const saveChanges = (event) => {
+  const saveChanges = async (event) => {
     event.preventDefault();
     const normalizedTitle = title.trim();
     const hasIncompleteDraft = unit.trim() && !normalizedTitle;
@@ -91,25 +93,35 @@ export default function CategoryAttributesModal({ category, onClose, onSave }) {
       return;
     }
 
-    if (!normalizedTitle) {
-      onSave(attributes);
-      return;
-    }
+    setIsSaving(true);
+    setSaveError("");
+    try {
+      if (!normalizedTitle) {
+        const saved = await onSave(attributes);
+        if (!saved) setSaveError("ذخیره ویژگی‌ها ناموفق بود. دوباره تلاش کنید.");
+        return;
+      }
 
-    const attributeData = {
-      title: normalizedTitle,
-      unit: unit.trim(),
-      showInFilter,
-    };
-    const updatedAttributes =
-      editingId === null
-        ? [...attributes, { id: Date.now(), ...attributeData }]
-        : attributes.map((attribute) =>
-            attribute.id === editingId
-              ? { ...attribute, ...attributeData }
-              : attribute,
-          );
-    onSave(updatedAttributes);
+      const attributeData = {
+        title: normalizedTitle,
+        unit: unit.trim(),
+        showInFilter,
+      };
+      const updatedAttributes =
+        editingId === null
+          ? [...attributes, { id: Date.now(), ...attributeData }]
+          : attributes.map((attribute) =>
+              attribute.id === editingId
+                ? { ...attribute, ...attributeData }
+                : attribute,
+            );
+      const saved = await onSave(updatedAttributes);
+      if (!saved) setSaveError("ذخیره ویژگی‌ها ناموفق بود. دوباره تلاش کنید.");
+    } catch (error) {
+      setSaveError(error.message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -139,6 +151,8 @@ export default function CategoryAttributesModal({ category, onClose, onSave }) {
         onDelete={deleteAttribute}
         onToggleFilter={toggleFilterVisibility}
       />
+      {saveError && <p role="alert" className="text-sm text-red-700">{saveError}</p>}
+      {isSaving && <p role="status" className="text-sm text-brand-dark/70">در حال ذخیره...</p>}
     </Modal>
   );
 }

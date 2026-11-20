@@ -1,5 +1,6 @@
 import ManagementTable from "../../components/management/ManagementTable";
 import ManagementToolbar from "../../components/management/ManagementToolbar";
+import ManagementFormModal from "../../components/management/ManagementFormModal";
 import useManagementRecords from "../../components/management/useManagementRecords";
 import config from "./data";
 
@@ -13,6 +14,8 @@ export default function Permission() {
         search={page.search}
         onSearchChange={page.setSearch}
         searchPlaceholder={config.searchPlaceholder}
+        addLabel="افزودن مجوز"
+        onAdd={page.openCreateForm}
       />
       <ManagementTable
         columns={config.columns}
@@ -20,7 +23,23 @@ export default function Permission() {
         emptyMessage="مجوزی برای نمایش پیدا نشد."
         itemLabel={config.itemLabel}
         onUpdate={page.updateRecord}
+        onEdit={page.openEditForm}
+        onDelete={page.deleteRecord}
+        loading={page.isLoading}
+        error={page.error}
+        notice={page.notice}
+        pagination={page.pagination}
+        onPageChange={page.setPage}
       />
+      {page.isFormOpen && (
+        <ManagementFormModal
+          title={config.itemLabel}
+          fields={config.fields}
+          record={page.editingRecord}
+          onClose={page.closeForm}
+          onSave={page.saveRecord}
+        />
+      )}
     </section>
   );
 }

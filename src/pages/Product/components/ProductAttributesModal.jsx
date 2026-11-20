@@ -11,10 +11,21 @@ export default function ProductAttributesModal({
     .filter((category) => product.categoryIds.includes(category.id))
     .flatMap((category) => category.attributes);
   const [values, setValues] = useState(product.attributeValues ?? {});
+  const [saveError, setSaveError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSave(values);
+    setSaveError("");
+    setIsSaving(true);
+    try {
+      const saved = await onSave(values);
+      if (!saved) setSaveError("ذخیره ویژگی‌های محصول ناموفق بود. دوباره تلاش کنید.");
+    } catch (error) {
+      setSaveError(error.message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -50,6 +61,8 @@ export default function ProductAttributesModal({
           برای دسته‌های این محصول هنوز ویژگی‌ای ثبت نشده است.
         </p>
       )}
+      {saveError && <p role="alert" className="text-sm text-red-700">{saveError}</p>}
+      {isSaving && <p role="status" className="text-sm text-brand-dark/70">در حال ذخیره...</p>}
     </Modal>
   );
 }

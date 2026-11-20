@@ -1,81 +1,51 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Plus, Search, Trash2 } from "lucide-react";
 import Modal from "../../components/Modal";
+import useManagementRecords from "../../components/management/useManagementRecords";
+import { uploadAdminImage } from "../../services/admin-records.service";
 
 function BrandModal({ onClose, onSave }) {
   const [latinTitle, setLatinTitle] = useState("");
   const [persianTitle, setPersianTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageDataUrl, setImageDataUrl] = useState("");
+  const [imageFile, setImageFile] = useState(null);
   const [imageName, setImageName] = useState("");
-  const [imageError, setImageError] = useState("");
-  const [isImageLoading, setIsImageLoading] = useState(false);
   const [imageAlt, setImageAlt] = useState("");
+  const [saveError, setSaveError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const latinTitleInputRef = useRef(null);
   const imageInputRef = useRef(null);
-  const readerRef = useRef(null);
-
-  useEffect(
-    () => () => readerRef.current?.abort(),
-    [],
-  );
 
   const handleImageChange = (event) => {
-    readerRef.current?.abort();
     const file = event.target.files?.[0];
+    setImageFile(file ?? null);
     setImageName(file?.name ?? "");
-    setImageDataUrl("");
-    setImageError("");
     event.target.setCustomValidity("");
-
-    if (!file) {
-      setIsImageLoading(false);
-      return;
-    }
-
-    const reader = new FileReader();
-    readerRef.current = reader;
-    setIsImageLoading(true);
-    reader.onload = () => {
-      if (readerRef.current !== reader) return;
-      if (typeof reader.result === "string") {
-        setImageDataUrl(reader.result);
-        setIsImageLoading(false);
-      } else {
-        setImageError("بارگذاری تصویر ناموفق بود. دوباره تلاش کنید.");
-        setIsImageLoading(false);
-      }
-    };
-    reader.onerror = () => {
-      if (readerRef.current !== reader) return;
-      setImageError("بارگذاری تصویر ناموفق بود. دوباره تلاش کنید.");
-      setIsImageLoading(false);
-    };
-    reader.readAsDataURL(file);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const normalizedLatinTitle = latinTitle.trim();
     const normalizedPersianTitle = persianTitle.trim();
     if (!normalizedLatinTitle || !normalizedPersianTitle) return;
 
-    if (isImageLoading || (imageName && !imageDataUrl)) {
-      imageInputRef.current?.setCustomValidity(
-        imageError || "لطفاً تا پایان بارگذاری تصویر صبر کنید.",
-      );
-      imageInputRef.current?.reportValidity();
-      return;
+    setSaveError("");
+    setIsSaving(true);
+    try {
+      const saved = await onSave({
+        latinTitle: normalizedLatinTitle,
+        persianTitle: normalizedPersianTitle,
+        description: description.trim(),
+        imageFile,
+        imageName,
+        imageAlt: imageAlt.trim(),
+      });
+      if (!saved) setSaveError("ذخیره برند ناموفق بود. خطای صفحه را بررسی کنید.");
+    } catch (error) {
+      setSaveError(error.message);
+    } finally {
+      setIsSaving(false);
     }
-
-    onSave({
-      latinTitle: normalizedLatinTitle,
-      persianTitle: normalizedPersianTitle,
-      description: description.trim(),
-      imageDataUrl,
-      imageName,
-      imageAlt: imageAlt.trim(),
-    });
   };
 
   return (
@@ -132,7 +102,6 @@ function BrandModal({ onClose, onSave }) {
         {imageName && (
           <span className="block text-xs text-brand-dark/60">{imageName}</span>
         )}
-        {imageError && <span className="block text-xs text-red-600">{imageError}</span>}
       </label>
 
       <label className="block space-y-2 text-sm font-medium text-brand-dark">
@@ -144,27 +113,36 @@ function BrandModal({ onClose, onSave }) {
           className="w-full rounded-xl border border-brand/20 px-3 py-3 outline-none focus:border-brand"
         />
       </label>
+      {saveError && <p role="alert" className="text-sm text-red-700">{saveError}</p>}
+      {isSaving && <p role="status" className="text-sm text-brand-dark/70">در حال ذخیره...</p>}
     </Modal>
   );
 }
 
 export default function Brand() {
-  const [brands, setBrands] = useState([]);
-  const [search, setSearch] = useState("");
+  const page = useManagementRecords({
+    resource: "brands",
+    columns: [
+      { key: "latinTitle", label: "Latin" },
+      { key: "persianTitle", label: "فارسی" },
+    ],
+  });
+  const brands = page.records;
+  const search = page.search;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredBrands = useMemo(() => {
-    const normalizedSearch = search.trim().toLocaleLowerCase();
-    return brands.filter(
-      (brand) =>
-        brand.latinTitle.toLocaleLowerCase().includes(normalizedSearch) ||
-        brand.persianTitle.toLocaleLowerCase().includes(normalizedSearch),
-    );
-  }, [brands, search]);
+  const filteredBrands = brands;
 
-  const saveBrand = (brandData) => {
-    setBrands((current) => [...current, { id: Date.now(), ...brandData }]);
-    setIsModalOpen(false);
+  const saveBrand = async (brandData) => {
+    const { imageFile: selectedImage, ...record } = brandData;
+    if (selectedImage) {
+      const uploadedImage = await uploadAdminImage(selectedImage);
+      record.imageName = uploadedImage.name;
+      record.imageUrl = uploadedImage.url;
+    }
+    const saved = await page.saveRecord(record);
+    if (saved) setIsModalOpen(false);
+    return saved;
   };
 
   return (
@@ -181,7 +159,10 @@ export default function Brand() {
           <input
             type="search"
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => {
+              page.setSearch(event.target.value);
+              page.setPage(1);
+            }}
             placeholder="نام فارسی یا لاتین برند را جست‌وجو کنید"
             className="min-w-0 flex-1 bg-transparent text-sm outline-none"
           />
@@ -230,9 +211,9 @@ export default function Brand() {
                     {brand.description || "—"}
                   </td>
                   <td className="px-3 py-3">
-                    {brand.imageDataUrl ? (
+                    {brand.imageUrl ? (
                       <img
-                        src={brand.imageDataUrl}
+                        src={brand.imageUrl}
                         alt={brand.imageAlt || "تصویر برند"}
                         className="mx-auto h-12 w-12 rounded-lg object-cover"
                       />
@@ -248,11 +229,7 @@ export default function Brand() {
                   <td className="whitespace-nowrap px-3 py-3">
                     <button
                       type="button"
-                      onClick={() =>
-                        setBrands((current) =>
-                          current.filter((item) => item.id !== brand.id),
-                        )
-                      }
+                      onClick={() => page.deleteRecord(brand.id)}
                       aria-label={`حذف برند ${brand.persianTitle}`}
                       title="حذف برند"
                       className="mx-1 inline-flex rounded-lg p-2 text-red-600 transition hover:bg-red-50"
@@ -280,6 +257,21 @@ export default function Brand() {
           onClose={() => setIsModalOpen(false)}
           onSave={saveBrand}
         />
+      )}
+      {(page.error || page.notice || page.pagination.last_page > 1) && (
+        <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <div aria-live="polite">
+            {page.error && <p className="text-red-700">{page.error}</p>}
+            {!page.error && page.notice && <p className="text-emerald-700">{page.notice}</p>}
+          </div>
+          {page.pagination.last_page > 1 && (
+            <nav aria-label="صفحه‌بندی برندها" className="flex items-center justify-center gap-3">
+              <button type="button" disabled={page.isLoading || page.page <= 1} onClick={() => page.setPage(page.page - 1)} className="rounded-lg border border-brand/20 px-3 py-1.5 disabled:opacity-50">قبلی</button>
+              <span>{page.page.toLocaleString("fa-IR")} / {page.pagination.last_page.toLocaleString("fa-IR")}</span>
+              <button type="button" disabled={page.isLoading || page.page >= page.pagination.last_page} onClick={() => page.setPage(page.page + 1)} className="rounded-lg border border-brand/20 px-3 py-1.5 disabled:opacity-50">بعدی</button>
+            </nav>
+          )}
+        </div>
       )}
     </section>
   );

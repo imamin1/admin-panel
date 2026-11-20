@@ -1,4 +1,5 @@
 export default {
+  resource: "questions",
   title: "مدیریت پرسش‌ها",
   itemLabel: "پرسش",
   searchPlaceholder: "نام کاربر، دسته یا متن پرسش را جست‌وجو کنید",

@@ -20,42 +20,24 @@ Chart.register(
   Legend,
 );
 
-const salesChartData = {
-  labels: ["شنبه", "یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه"],
-  datasets: [
-    {
-      label: "محصول اول",
-      data: [18, 24, 21, 30, 27, 35, 32],
-      borderColor: "#20352b",
-      backgroundColor: "#20352b",
-      tension: 0.35,
-    },
-    {
-      label: "محصول دوم",
-      data: [12, 16, 14, 19, 23, 21, 28],
-      borderColor: "#b49a62",
-      backgroundColor: "#b49a62",
-      tension: 0.35,
-    },
-    {
-      label: "محصول سوم",
-      data: [9, 11, 13, 12, 16, 18, 17],
-      borderColor: "#3d8b73",
-      backgroundColor: "#3d8b73",
-      tension: 0.35,
-    },
-  ],
-};
-
-export default function ProductSalesChart() {
+export default function ProductSalesChart({ revenue, loading }) {
   const chartRef = useRef(null);
 
   useEffect(() => {
-    if (!chartRef.current) return;
+    if (!chartRef.current || !revenue) return;
 
     const chart = new Chart(chartRef.current, {
       type: "line",
-      data: salesChartData,
+      data: {
+        labels: ["امروز", "هفت روز گذشته", "سی روز گذشته"],
+        datasets: [{
+          label: "درآمد (تومان)",
+          data: [revenue.today, revenue.lastWeek, revenue.lastMonth],
+          borderColor: "#20352b",
+          backgroundColor: "#20352b",
+          tension: 0.35,
+        }],
+      },
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -82,7 +64,7 @@ export default function ProductSalesChart() {
             titleFont: { family: "Vazirmatn, sans-serif" },
             callbacks: {
               label: (context) =>
-                `${context.dataset.label}: ${context.parsed.y.toLocaleString("fa-IR")} عدد فروش`,
+                `${context.dataset.label}: ${context.parsed.y.toLocaleString("fa-IR")}`,
             },
           },
         },
@@ -105,22 +87,24 @@ export default function ProductSalesChart() {
     });
 
     return () => chart.destroy();
-  }, []);
+  }, [revenue]);
 
   return (
     <section className="min-w-0 rounded-2xl border border-brand/20 bg-white p-4 shadow-sm">
       <h2 className="mb-1 text-center font-semibold text-brand-dark">
-        آمار فروش محصولات
+        درآمد سفارش‌های پرداخت‌شده
       </h2>
       <p className="mb-3 text-center text-xs text-brand-dark/70">
-        تعداد فروش روزانه محصولات در هفته گذشته (آمار نمونه)
+        جمع مبلغ پرداخت‌شده در بازه‌های زمانی گزارش‌شده
       </p>
       <div className="h-64">
-        <canvas
-          ref={chartRef}
-          aria-label="نمودار آمار فروش محصولات"
-          role="img"
-        />
+        {loading ? (
+          <p className="pt-20 text-center text-sm text-brand-dark/60">در حال دریافت اطلاعات...</p>
+        ) : revenue ? (
+          <canvas ref={chartRef} aria-label="نمودار درآمد سفارش‌های پرداخت‌شده" role="img" />
+        ) : (
+          <p className="pt-20 text-center text-sm text-brand-dark/60">اطلاعات درآمد در دسترس نیست.</p>
+        )}
       </div>
     </section>
   );

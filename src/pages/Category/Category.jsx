@@ -1,84 +1,51 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { ListPlus, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import CategoryAttributesModal from "./CategoryAttributesModal";
 import CategoryModal from "./CategoryModal";
+import useManagementRecords from "../../components/management/useManagementRecords";
 
-const initialCategories = [
-  {
-    id: 1,
-    parentId: null,
-    title: "لوازم جانبی دیجیتال",
-    isActive: true,
-    attributes: [
-      { id: 101, title: "نوع اتصال", unit: "نوع", showInFilter: true },
-    ],
-  },
-  { id: 2, parentId: null, title: "خانه و آشپزخانه", isActive: true, attributes: [] },
-  { id: 3, parentId: null, title: "کتاب و لوازم‌التحریر", isActive: false, attributes: [] },
-  { id: 4, parentId: 1, title: "هدفون و هندزفری", isActive: true, attributes: [] },
-];
+const config = {
+  resource: "categories",
+  columns: [{ key: "title", label: "عنوان" }],
+};
 
 export default function Category() {
-  const [categories, setCategories] = useState(initialCategories);
-  const [search, setSearch] = useState("");
+  const page = useManagementRecords(config);
   const [editingId, setEditingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [attributesCategoryId, setAttributesCategoryId] = useState(null);
 
-  const filteredCategories = useMemo(() => {
-    const normalizedSearch = search.trim().toLocaleLowerCase();
-    return categories.filter((category) =>
-      category.title.toLocaleLowerCase().includes(normalizedSearch),
-    );
-  }, [categories, search]);
-
   const openCreateForm = () => {
+    page.openCreateForm();
     setEditingId(null);
     setIsModalOpen(true);
   };
 
   const openEditForm = (category) => {
+    page.openEditForm(category);
     setEditingId(category.id);
     setIsModalOpen(true);
   };
 
   const closeForm = () => {
+    page.closeForm();
     setIsModalOpen(false);
     setEditingId(null);
   };
 
-  const saveCategory = (categoryData) => {
-    if (editingId === null) {
-      setCategories((current) => [
-        ...current,
-        { id: Date.now(), attributes: [], ...categoryData },
-      ]);
-    } else {
-      setCategories((current) =>
-        current.map((category) =>
-          category.id === editingId
-            ? { ...category, ...categoryData }
-            : category,
-        ),
-      );
+  const saveCategory = async (data) => {
+    const saved = await page.saveRecord(data);
+    if (saved) {
+      setIsModalOpen(false);
+      setEditingId(null);
     }
-
-    closeForm();
+    return saved;
   };
 
-  const deleteCategory = (id) => {
-    setCategories((current) => current.filter((category) => category.id !== id));
-  };
-
-  const saveCategoryAttributes = (attributes) => {
-    setCategories((current) =>
-      current.map((category) =>
-        category.id === attributesCategoryId
-          ? { ...category, attributes }
-          : category,
-      ),
-    );
-    setAttributesCategoryId(null);
+  const saveCategoryAttributes = async (attributes) => {
+    const saved = await page.updateRecord(attributesCategoryId, { attributes });
+    if (saved) setAttributesCategoryId(null);
+    return saved;
   };
 
   return (
@@ -94,8 +61,11 @@ export default function Category() {
           <Search size={18} className="shrink-0 text-brand-dark/60" aria-hidden="true" />
           <input
             type="search"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            value={page.search}
+            onChange={(event) => {
+              page.setSearch(event.target.value);
+              page.setPage(1);
+            }}
             placeholder="قسمتی از عنوان را وارد کنید"
             className="min-w-0 flex-1 bg-transparent text-sm outline-none"
           />
@@ -123,22 +93,17 @@ export default function Category() {
             </tr>
           </thead>
           <tbody className="divide-y divide-brand/15">
-            {filteredCategories.length > 0 ? (
-              filteredCategories.map((category, index) => (
-                <tr
-                  key={category.id}
-                  className="transition-colors hover:bg-brand-surface/50"
-                >
-                  <td className="whitespace-nowrap px-3 py-3">{index + 1}</td>
+            {page.records.length ? (
+              page.records.map((category, index) => (
+                <tr key={category.id} className="transition-colors hover:bg-brand-surface/50">
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {((page.page - 1) * page.pagination.per_page + index + 1).toLocaleString("fa-IR")}
+                  </td>
                   <td className="whitespace-nowrap px-3 py-3">{category.title}</td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <span
-                      className={`inline-flex rounded-full px-2.5 py-1 text-xs ${
-                        category.isActive
-                          ? "bg-emerald-100 text-emerald-800"
-                          : "bg-gray-100 text-gray-600"
-                      }`}
-                    >
+                    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs ${
+                      category.isActive ? "bg-emerald-100 text-emerald-800" : "bg-gray-100 text-gray-600"
+                    }`}>
                       {category.isActive ? "فعال" : "غیرفعال"}
                     </span>
                   </td>
@@ -163,7 +128,7 @@ export default function Category() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => deleteCategory(category.id)}
+                      onClick={() => page.deleteRecord(category.id)}
                       aria-label={`حذف ${category.title}`}
                       title="حذف دسته"
                       className="mx-1 inline-flex rounded-lg p-2 text-red-600 transition hover:bg-red-50"
@@ -176,27 +141,40 @@ export default function Category() {
             ) : (
               <tr>
                 <td colSpan={4} className="px-3 py-8 text-brand-dark/60">
-                  دسته‌ای با این عنوان پیدا نشد.
+                  {page.isLoading ? "در حال دریافت اطلاعات..." : "دسته‌ای با این عنوان پیدا نشد."}
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+        {(page.error || page.notice || page.pagination.last_page > 1) && (
+          <div className="flex flex-col gap-3 border-t border-brand/15 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+            <div aria-live="polite">
+              {page.error && <p className="text-red-700">{page.error}</p>}
+              {!page.error && page.notice && <p className="text-emerald-700">{page.notice}</p>}
+            </div>
+            {page.pagination.last_page > 1 && (
+              <nav aria-label="صفحه‌بندی دسته‌ها" className="flex items-center justify-center gap-3">
+                <button type="button" disabled={page.isLoading || page.page <= 1} onClick={() => page.setPage(page.page - 1)} className="rounded-lg border border-brand/20 px-3 py-1.5 disabled:opacity-50">قبلی</button>
+                <span>{page.page.toLocaleString("fa-IR")} / {page.pagination.last_page.toLocaleString("fa-IR")}</span>
+                <button type="button" disabled={page.isLoading || page.page >= page.pagination.last_page} onClick={() => page.setPage(page.page + 1)} className="rounded-lg border border-brand/20 px-3 py-1.5 disabled:opacity-50">بعدی</button>
+              </nav>
+            )}
+          </div>
+        )}
       </div>
 
       {isModalOpen && (
         <CategoryModal
-          category={categories.find((category) => category.id === editingId) ?? null}
-          categories={categories}
+          category={page.records.find((category) => category.id === editingId) ?? null}
+          categories={page.records}
           onClose={closeForm}
           onSave={saveCategory}
         />
       )}
       {attributesCategoryId !== null && (
         <CategoryAttributesModal
-          category={categories.find(
-            (category) => category.id === attributesCategoryId,
-          )}
+          category={page.records.find((category) => category.id === attributesCategoryId)}
           onClose={() => setAttributesCategoryId(null)}
           onSave={saveCategoryAttributes}
         />

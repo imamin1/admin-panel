@@ -7,6 +7,9 @@ export default function ProductTable({
   products,
   categories,
   search,
+  loading,
+  page = 1,
+  perPage = 100,
   onSearchChange,
   onCreate,
   onEdit,
@@ -68,7 +71,9 @@ export default function ProductTable({
             {products.length > 0 ? (
               products.map((product, index) => (
                 <tr key={product.id} className="hover:bg-brand-surface/40">
-                  <td className="whitespace-nowrap px-3 py-3">{index + 1}</td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {((page - 1) * perPage + index + 1).toLocaleString("fa-IR")}
+                  </td>
                   <td className="min-w-40 px-3 py-3">{categoryNames(product.categoryIds)}</td>
                   <td className="whitespace-nowrap px-3 py-3">{product.title}</td>
                   <td className="whitespace-nowrap px-3 py-3">{formatPrice(product.price)}</td>
@@ -128,7 +133,7 @@ export default function ProductTable({
             ) : (
               <tr>
                 <td colSpan={8} className="px-3 py-8 text-brand-dark/60">
-                  محصولی پیدا نشد.
+                  {loading ? "در حال دریافت اطلاعات..." : "محصولی پیدا نشد."}
                 </td>
               </tr>
             )}

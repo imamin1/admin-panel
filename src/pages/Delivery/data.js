@@ -1,4 +1,5 @@
 export default {
+  resource: "deliveries",
   title: "مدیریت روش‌های ارسال",
   itemLabel: "روش ارسال",
   searchPlaceholder: "عنوان روش ارسال را جست‌وجو کنید",

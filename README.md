@@ -1,16 +1,28 @@
-# React + Vite
+# پنل مدیریت فروشگاه
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+پنل React/Vite برای مدیریت فروشگاه و اتصال به API لاراول در پوشهٔ `AP-bacend/Ecommerce-Api`.
 
-Currently, two official plugins are available:
+## راه‌اندازی
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+در ریشهٔ این پوشه:
 
-## React Compiler
+```powershell
+npm install
+Copy-Item .env.example .env
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+در فایل `.env` مقدار `VITE_API_URL` را روی آدرس API تنظیم کنید (پیش‌فرض: `http://127.0.0.1:8000`). راه‌اندازی API، پایگاه داده و حساب مدیر در README بک‌اند توضیح داده شده است.
 
-## Expanding the ESLint configuration
+## ذخیره‌سازی
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+فهرست‌ها، فرم‌های مدیریتی و داشبورد از API احراز هویت‌شده استفاده می‌کنند. رکوردهای فروشگاهی در پایگاه دادهٔ بک‌اند ذخیره می‌شوند؛ تصاویر ابتدا به API بارگذاری و سپس URL آن‌ها همراه رکورد ذخیره می‌شود. حساب‌های کاربران در منبع جداگانهٔ کاربران نگهداری می‌شوند.
+
+## بررسی
+
+```powershell
+npm run lint
+npm run build
+```
+
+این پنل عمومی نیست و با `noindex, nofollow` از ایندکس موتورهای جست‌وجو خارج شده است. برای SEO و رتبه‌بندی فروشگاه به وب‌سایت عمومی نیاز است.

@@ -9,6 +9,11 @@ export default function ManagementTable({
   onEdit,
   onDelete,
   onUpdate,
+  loading = false,
+  error,
+  notice,
+  pagination,
+  onPageChange,
 }) {
   const hasActions = Boolean(onEdit || onDelete);
 
@@ -94,12 +99,44 @@ export default function ManagementTable({
                 colSpan={columns.length + 1 + Number(hasActions)}
                 className="px-3 py-8 text-brand-dark/60"
               >
-                {emptyMessage}
+                {loading ? "در حال دریافت اطلاعات..." : emptyMessage}
               </td>
             </tr>
           )}
         </tbody>
       </table>
+      {(error || notice || (pagination && pagination.last_page > 1)) && (
+        <div className="flex flex-col gap-3 border-t border-brand/15 px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <div aria-live="polite">
+            {error && <p className="text-red-700">{error}</p>}
+            {!error && notice && <p className="text-emerald-700">{notice}</p>}
+          </div>
+          {pagination && pagination.last_page > 1 && (
+            <nav aria-label="صفحه‌بندی فهرست" className="flex items-center justify-center gap-3">
+              <button
+                type="button"
+                disabled={loading || pagination.current_page <= 1}
+                onClick={() => onPageChange(pagination.current_page - 1)}
+                className="rounded-lg border border-brand/20 px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                قبلی
+              </button>
+              <span>
+                {pagination.current_page.toLocaleString("fa-IR")} /{" "}
+                {pagination.last_page.toLocaleString("fa-IR")}
+              </span>
+              <button
+                type="button"
+                disabled={loading || pagination.current_page >= pagination.last_page}
+                onClick={() => onPageChange(pagination.current_page + 1)}
+                className="rounded-lg border border-brand/20 px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                بعدی
+              </button>
+            </nav>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,10 +1,11 @@
 export default {
+  resource: "roles",
   title: "مدیریت نقش‌ها",
   itemLabel: "نقش",
   searchPlaceholder: "عنوان نقش را جست‌وجو کنید",
   fields: [
     { key: "title", label: "عنوان نقش" },
-    { key: "description", label: "توضیحات", type: "textarea" },
+    { key: "description", label: "توضیحات", type: "textarea", required: false },
     {
       key: "permissions",
       label: "مجوزها (برای انتخاب چند مورد، Ctrl را نگه دارید)",

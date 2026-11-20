@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { X } from "lucide-react";
 import Modal from "../../../components/Modal";
-import { productBrands, productColors, productWarranties } from "../data";
+import { getApiErrorMessage } from "../../../api";
+import { uploadAdminImage } from "../../../services/admin-records.service";
 
 const emptyProduct = {
   categoryIds: [],
@@ -13,6 +14,7 @@ const emptyProduct = {
   warranties: [],
   description: "",
   imageName: "",
+  imageUrl: "",
   imageAlt: "",
   tags: [],
   stock: "",
@@ -38,6 +40,9 @@ const inputClassName =
 export default function ProductFormModal({
   product,
   categories,
+  brands = [],
+  colors = [],
+  warranties = [],
   onClose,
   onSave,
 }) {
@@ -50,6 +55,8 @@ export default function ProductFormModal({
     tags: product?.tags ?? [],
   }));
   const [imageFile, setImageFile] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const categorySelectRef = useRef(null);
   const titleInputRef = useRef(null);
 
@@ -79,7 +86,7 @@ export default function ProductFormModal({
     );
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const normalizedTitle = form.title.trim();
     if (!normalizedTitle) {
@@ -87,19 +94,30 @@ export default function ProductFormModal({
       return;
     }
 
-    onSave({
-      ...form,
-      title: normalizedTitle,
-      price: Number(form.price),
-      weight: Number(form.weight) || 0,
-      stock: Number(form.stock) || 0,
-      discount: Number(form.discount) || 0,
-      tags:
-        typeof form.tags === "string"
-          ? form.tags.split("-").map((tag) => tag.trim()).filter(Boolean)
-          : form.tags,
-      imageName: imageFile?.name ?? form.imageName,
-    });
+    setIsSaving(true);
+    setSaveError("");
+    try {
+      const uploadedImage = imageFile ? await uploadAdminImage(imageFile) : null;
+      const saved = await onSave({
+        ...form,
+        title: normalizedTitle,
+        price: Number(form.price),
+        weight: Number(form.weight) || 0,
+        stock: Number(form.stock) || 0,
+        discount: Number(form.discount) || 0,
+        tags:
+          typeof form.tags === "string"
+            ? form.tags.split("-").map((tag) => tag.trim()).filter(Boolean)
+            : form.tags,
+        imageName: uploadedImage?.name ?? form.imageName,
+        imageUrl: uploadedImage?.url ?? form.imageUrl,
+      });
+      if (!saved) setSaveError("ذخیره محصول ناموفق بود. خطای نمایش‌داده‌شده در صفحه را بررسی کنید.");
+    } catch (error) {
+      setSaveError(getApiErrorMessage(error));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -188,7 +206,7 @@ export default function ProductFormModal({
             className={inputClassName}
           >
             <option value="">انتخاب برند</option>
-            {productBrands.map((brand) => (
+            {brands.map((brand) => (
               <option key={brand} value={brand}>{brand}</option>
             ))}
           </select>
@@ -196,7 +214,7 @@ export default function ProductFormModal({
 
         <ProductField label="رنگ‌ها">
           <div className="flex flex-wrap gap-2 rounded-xl border border-brand/20 bg-white p-2.5">
-            {productColors.map((color) => (
+            {colors.map((color) => (
               <button
                 key={color.name}
                 type="button"
@@ -215,7 +233,7 @@ export default function ProductFormModal({
         </ProductField>
         <ProductField label="گارانتی‌ها">
           <div className="flex flex-wrap gap-2 rounded-xl border border-brand/20 bg-white p-2.5">
-            {productWarranties.map((warranty) => (
+            {warranties.map((warranty) => (
               <button
                 key={warranty}
                 type="button"
@@ -302,6 +320,8 @@ export default function ProductFormModal({
           وضعیت فعال
         </label>
       </div>
+      {saveError && <p role="alert" className="text-sm text-red-700">{saveError}</p>}
+      {isSaving && <p role="status" className="text-sm text-brand-dark/70">در حال ذخیره...</p>}
     </Modal>
   );
 }

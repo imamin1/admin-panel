@@ -1,4 +1,5 @@
 export default {
+  resource: "comments",
   title: "مدیریت نظرات",
   itemLabel: "نظر",
   searchPlaceholder: "نام کاربر، محصول یا متن نظر را جست‌وجو کنید",
