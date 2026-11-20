@@ -7,15 +7,15 @@ const initialCategories = [
   {
     id: 1,
     parentId: null,
-    title: "دسته شماره یک",
+    title: "لوازم جانبی دیجیتال",
     isActive: true,
     attributes: [
-      { id: 101, title: "ویژگی شماره ۱", unit: "عدد", showInFilter: true },
+      { id: 101, title: "نوع اتصال", unit: "نوع", showInFilter: true },
     ],
   },
-  { id: 2, parentId: null, title: "دسته شماره دو", isActive: true, attributes: [] },
-  { id: 3, parentId: null, title: "دسته شماره سه", isActive: false, attributes: [] },
-  { id: 4, parentId: 1, title: "دسته شماره چهار", isActive: true, attributes: [] },
+  { id: 2, parentId: null, title: "خانه و آشپزخانه", isActive: true, attributes: [] },
+  { id: 3, parentId: null, title: "کتاب و لوازم‌التحریر", isActive: false, attributes: [] },
+  { id: 4, parentId: 1, title: "هدفون و هندزفری", isActive: true, attributes: [] },
 ];
 
 export default function Category() {

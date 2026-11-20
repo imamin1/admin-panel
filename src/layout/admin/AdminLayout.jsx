@@ -96,6 +96,7 @@ export default function AdminLayout({ children }) {
         />
 
         <div className="min-h-0 flex-1 overflow-y-auto">
+          
           <Content>{pageContent}</Content>
         </div>
       </div>

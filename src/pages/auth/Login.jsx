@@ -1,41 +1,70 @@
 
-import { ErrorMessage, FastField, Form, Formik } from "formik";
+import {
+  ErrorMessage,
+  FastField,
+  Form,
+  Formik,
+  useFormikContext,
+} from "formik";
 import { LockKeyhole, Phone } from "lucide-react";
 import * as Yup from "yup";
-import axios from "axios";
+import { getApiErrorMessage } from "../../api";
+import { useAuth } from "../../contexts/auth-context";
 import PersonalError from "./PersonalError";
+import { useLocation, useNavigate } from "react-router-dom";
+
+const FormikStatus = () => {
+  const { status } = useFormikContext();
+
+  return status ? (
+    <div role="alert" className="text-center text-sm text-red-500">
+      {status}
+    </div>
+  ) : null;
+};
+
+const LoginSubmitButton = () => {
+  const { isSubmitting } = useFormikContext();
+
+  return (
+    <button
+      type="submit"
+      disabled={isSubmitting}
+      className="w-full rounded-xl bg-gray-950 py-3.5 text-white font-semibold transition hover:bg-lime-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      {isSubmitting ? "در حال ورود..." : "ورود به حساب کاربری"}
+    </button>
+  );
+};
 
 const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
+
   const initialValues = {
     phone: "",
     password: "",
     remember: false,
   };
 
-  const onSubmit = async (values) => {
-    try {
-      const response = await axios.post(
-        "http://ecomadmin.azhadev.ir/api/auth/login",
-        {
-          ...values,
-          remember: values.remember ? 1 : 0,
-        }
-      );
+  const onSubmit = async (values, { setStatus }) => {
+    setStatus(undefined);
 
-      console.log("Success:", response.data);
+    try {
+      await login(values);
+      navigate(location.state?.from?.pathname ?? "/dashboard", {
+        replace: true,
+      });
     } catch (error) {
-      console.log(
-        "Error:",
-        error.response?.data || error.message
-      );
+      setStatus(getApiErrorMessage(error, { context: "login" }));
     }
   };
-
   const phoneRegex =
-    /^(?:09\d{9}|(?:\+|00)?[1-9]\d{7,14})$/;
+    /^\d{11}$/;
 
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s])\S{8,}$/;
+  // const passwordRegex =
+  //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s])\S{8,}$/;
 
   const validationSchema = Yup.object({
     phone: Yup.string()
@@ -46,15 +75,14 @@ const Login = () => {
       ),
 
     password: Yup.string()
-      .required("رمز عبور الزامی است")
-      .min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد")
-      .matches(
-        passwordRegex,
-        "رمز عبور باید شامل حروف کوچک و بزرگ انگلیسی، عدد و نماد باشد"
-      ),
+      .required("رمز عبور الزامی است"),
+      // .min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد"),
+      // .matches(
+      //   passwordRegex,
+      //   "رمز عبور باید شامل حروف کوچک و بزرگ انگلیسی، عدد و نماد باشد"
+      // ),
 
-    remember: Yup.boolean(),
-  });
+     });
 
 
   return (
@@ -75,10 +103,12 @@ const Login = () => {
       {/* Form */}
       <Formik
         initialValues={initialValues}
+        initialStatus={location.state?.notice}
         onSubmit={onSubmit}
         validationSchema={validationSchema}
       >
         <Form noValidate className="flex flex-col gap-5">
+          <FormikStatus />
           {/* Phone */}
           <div className="flex flex-col gap-2">
             <label
@@ -160,12 +190,7 @@ const Login = () => {
           </div>
 
           {/* Submit */}
-          <button
-            type="submit"
-            className="w-full rounded-xl bg-gray-950 py-3.5 text-white font-semibold transition hover:bg-lime-700 active:scale-[0.98]"
-          >
-            ورود به حساب کاربری
-          </button>
+          <LoginSubmitButton />
         </Form>
       </Formik>
 

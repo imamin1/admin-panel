@@ -5,6 +5,7 @@ export default {
   fields: [
     { key: "customerId", label: "شناسه مشتری", type: "number", min: 1 },
     { key: "customer", label: "نام مشتری" },
+    { key: "customerPhone", label: "شماره تماس نمایشی", type: "tel" },
     {
       key: "status",
       label: "وضعیت پرداخت",
@@ -17,6 +18,7 @@ export default {
   columns: [
     { key: "customerId", label: "شناسه مشتری" },
     { key: "customer", label: "نام مشتری" },
+    { key: "customerPhone", label: "شماره تماس نمایشی" },
     { key: "status", label: "وضعیت" },
     { key: "paymentDate", label: "تاریخ پرداخت", format: "date" },
     { key: "amount", label: "مبلغ پرداختی", format: "money" },
@@ -24,11 +26,21 @@ export default {
   records: [
     {
       id: 1,
-      customerId: 50,
-      customer: "قاسم بساکی",
+      customerId: 1024,
+      customer: "سارا محمدی",
+      customerPhone: "09XX XXX XXXX",
       status: "پرداخت شده",
-      paymentDate: "2026-10-15",
-      amount: 100000,
+      paymentDate: "2026-11-18",
+      amount: 3480000,
+    },
+    {
+      id: 2,
+      customerId: 1025,
+      customer: "امیرحسین رضایی",
+      customerPhone: "09XX XXX XXXX",
+      status: "در انتظار پرداخت",
+      paymentDate: "",
+      amount: 725000,
     },
   ],
 };

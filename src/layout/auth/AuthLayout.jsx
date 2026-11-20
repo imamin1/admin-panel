@@ -10,8 +10,8 @@ const AuthLayout = () => {
     >
       <div className="w-full max-w-md rounded-2xl bg-white p-6 sm:p-9 shadow-xl shadow-gray-200/60 border border-gray-100">
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="*" element={<Navigate to="/auth/login" replace />} />
         </Routes>
       </div>
     </div>

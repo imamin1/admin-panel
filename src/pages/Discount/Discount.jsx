@@ -5,19 +5,19 @@ import Modal from "../../components/Modal";
 const initialDiscounts = [
   {
     id: 1,
-    title: "تخفیف ویژه",
-    code: "TAKHFiF39",
-    percentage: 39,
-    expiresAt: "2027-12-31",
-    appliesTo: "همه محصولات",
+    title: "تخفیف خرید پاییزی",
+    code: "AUTUMN10",
+    percentage: 10,
+    expiresAt: "2026-12-31",
+    appliesTo: "لوازم جانبی دیجیتال",
   },
 ];
 
 const productOptions = [
   "همه محصولات",
-  "محصول شماره ۱",
-  "محصول شماره ۲",
-  "محصول شماره ۳",
+  "هدفون بی‌سیم انکر مدل Soundcore Q20i",
+  "ماگ استیل دوجداره ۴۵۰ میلی‌لیتری",
+  "کابل USB-C یک‌متری باسئوس",
 ];
 
 function DiscountModal({ discount, onClose, onSave }) {

@@ -24,11 +24,27 @@ export default {
   records: [
     {
       id: 1,
-      name: "قاسم بساکی",
-      mobile: "09110110011",
-      email: "ghasem@example.com",
+      name: "سارا محمدی",
+      mobile: "09XX XXX XXXX",
+      email: "sara.mohammadi@example.com",
       role: "کاربر",
-      registeredAt: "2026-10-12",
+      registeredAt: "2026-11-05",
+    },
+    {
+      id: 2,
+      name: "امیرحسین رضایی",
+      mobile: "09XX XXX XXXX",
+      email: "amir.rezaei@example.com",
+      role: "کاربر",
+      registeredAt: "2026-11-12",
+    },
+    {
+      id: 3,
+      name: "نگار کریمی",
+      mobile: "09XX XXX XXXX",
+      email: "negar.karimi@example.com",
+      role: "نویسنده",
+      registeredAt: "2026-11-18",
     },
   ],
 };

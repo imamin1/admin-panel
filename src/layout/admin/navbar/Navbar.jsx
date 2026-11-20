@@ -1,7 +1,24 @@
-import { Bell, Menu, Moon, Search, Sun, UserRound } from "lucide-react";
+import { Bell, LogOut, Menu, Moon, Search, Sun, UserRound } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { getApiErrorMessage } from "../../../api";
+import { useAuth } from "../../../contexts/auth-context";
 
 export default function Navbar({ onMenuClick, theme, onThemeToggle }) {
   const isDark = theme === "dark";
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/auth/login", { replace: true });
+    } catch (error) {
+      navigate("/auth/login", {
+        replace: true,
+        state: { notice: getApiErrorMessage(error) },
+      });
+    }
+  };
 
   return (
     <header
@@ -63,6 +80,16 @@ export default function Navbar({ onMenuClick, theme, onThemeToggle }) {
           className="flex h-10 w-10 items-center justify-center rounded-full border border-brand/30 bg-brand-surface/70 text-app-text transition hover:bg-brand-surface"
         >
           <UserRound size={20} />
+        </button>
+
+        <button
+          type="button"
+          onClick={handleLogout}
+          aria-label="خروج از حساب کاربری"
+          title="خروج"
+          className="rounded-xl p-2 text-app-muted transition hover:bg-brand-surface/60 hover:text-app-text"
+        >
+          <LogOut size={20} />
         </button>
       </div>
     </header>

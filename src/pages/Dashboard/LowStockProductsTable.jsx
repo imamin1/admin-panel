@@ -1,9 +1,9 @@
 const lowStockProducts = [
-  { category: "دسته شماره فلان", title: "محصول فلان", status: "پایان یافته" },
-  { category: "دسته شماره فلان", title: "محصول فلان", status: "رو به اتمام - 4" },
-  { category: "دسته شماره فلان", title: "محصول فلان", status: "پایان یافته" },
-  { category: "دسته شماره فلان", title: "محصول فلان", status: "پایان یافته" },
-  { category: "دسته شماره فلان", title: "محصول فلان", status: "رو به اتمام - 2" },
+  { category: "لوازم جانبی دیجیتال", title: "هدفون بی‌سیم انکر مدل Soundcore Q20i", status: "رو به اتمام - ۳" },
+  { category: "خانه و آشپزخانه", title: "ماگ استیل دوجداره ۴۵۰ میلی‌لیتری", status: "رو به اتمام - ۲" },
+  { category: "لوازم جانبی دیجیتال", title: "کابل USB-C یک‌متری باسئوس", status: "پایان یافته" },
+  { category: "کتاب و لوازم‌التحریر", title: "دفتر یادداشت جلد سخت", status: "رو به اتمام - ۴" },
+  { category: "خانه و آشپزخانه", title: "بطری آب استیل ۷۵۰ میلی‌لیتری", status: "پایان یافته" },
 ];
 
 export default function LowStockProductsTable() {

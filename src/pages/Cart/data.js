@@ -5,6 +5,7 @@ export default {
   fields: [
     { key: "customerId", label: "شناسه مشتری", type: "number", min: 1 },
     { key: "customer", label: "نام مشتری" },
+    { key: "customerPhone", label: "شماره تماس نمایشی", type: "tel" },
     { key: "date", label: "تاریخ", type: "date" },
     { key: "total", label: "مبلغ کل (تومان)", type: "number", min: 0 },
     {
@@ -17,6 +18,7 @@ export default {
   columns: [
     { key: "customerId", label: "شناسه مشتری" },
     { key: "customer", label: "نام مشتری" },
+    { key: "customerPhone", label: "شماره تماس نمایشی" },
     { key: "date", label: "تاریخ", format: "date" },
     { key: "total", label: "مبلغ کل", format: "money" },
     { key: "status", label: "وضعیت" },
@@ -24,11 +26,21 @@ export default {
   records: [
     {
       id: 1,
-      customerId: 50,
-      customer: "قاسم بساکی",
-      date: "2026-10-15",
-      total: 100000,
+      customerId: 1024,
+      customer: "سارا محمدی",
+      customerPhone: "09XX XXX XXXX",
+      date: "2026-11-18",
+      total: 3480000,
       status: "فعال",
+    },
+    {
+      id: 2,
+      customerId: 1025,
+      customer: "امیرحسین رضایی",
+      customerPhone: "09XX XXX XXXX",
+      date: "2026-11-19",
+      total: 725000,
+      status: "رهاشده",
     },
   ],
 };

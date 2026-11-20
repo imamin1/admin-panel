@@ -117,8 +117,8 @@ const Dashboard = () => {
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td>دسته شماره فلان</td>
-                                <td>محصول فلان</td>
+                                <td>لوازم جانبی دیجیتال</td>
+                                <td>هدفون بی‌سیم انکر مدل Soundcore Q20i</td>
                                 <td>پایان یافته</td>
                                 <td>
                                     <i class="fas fa-times text-danger mx-1 hoverable_text pointer has_tooltip" title="نادیده گرفتن" data-bs-toggle="tooltip" data-bs-placement="top"></i>
@@ -126,8 +126,8 @@ const Dashboard = () => {
                             </tr>
                             <tr>
                                 <td>1</td>
-                                <td>دسته شماره فلان</td>
-                                <td>محصول فلان</td>
+                                <td>خانه و آشپزخانه</td>
+                                <td>ماگ استیل دوجداره ۴۵۰ میلی‌لیتری</td>
                                 <td>رو به اتمام - 4</td>
                                 <td>
                                     <i class="fas fa-times text-danger mx-1 hoverable_text pointer has_tooltip" title="نادیده گرفتن" data-bs-toggle="tooltip" data-bs-placement="top"></i>
@@ -135,8 +135,8 @@ const Dashboard = () => {
                             </tr>
                             <tr>
                                 <td>1</td>
-                                <td>دسته شماره فلان</td>
-                                <td>محصول فلان</td>
+                                <td>لوازم جانبی دیجیتال</td>
+                                <td>کابل USB-C یک‌متری باسئوس</td>
                                 <td>پایان یافته</td>
                                 <td>
                                     <i class="fas fa-times text-danger mx-1 hoverable_text pointer has_tooltip" title="نادیده گرفتن" data-bs-toggle="tooltip" data-bs-placement="top"></i>
@@ -144,8 +144,8 @@ const Dashboard = () => {
                             </tr>
                             <tr>
                                 <td>1</td>
-                                <td>دسته شماره فلان</td>
-                                <td>محصول فلان</td>
+                                <td>کتاب و لوازم‌التحریر</td>
+                                <td>دفتر یادداشت جلد سخت</td>
                                 <td>پایان یافته</td>
                                 <td>
                                     <i class="fas fa-times text-danger mx-1 hoverable_text pointer has_tooltip" title="نادیده گرفتن" data-bs-toggle="tooltip" data-bs-placement="top"></i>
@@ -153,8 +153,8 @@ const Dashboard = () => {
                             </tr>
                             <tr>
                                 <td>1</td>
-                                <td>دسته شماره فلان</td>
-                                <td>محصول فلان</td>
+                                <td>خانه و آشپزخانه</td>
+                                <td>بطری آب استیل ۷۵۰ میلی‌لیتری</td>
                                 <td>رو به اتمام - 2</td>
                                 <td>
                                     <i class="fas fa-times text-danger mx-1 hoverable_text pointer has_tooltip" title="نادیده گرفتن" data-bs-toggle="tooltip" data-bs-placement="top"></i>

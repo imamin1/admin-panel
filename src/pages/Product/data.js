@@ -1,7 +1,7 @@
 export const productCategories = [
   {
     id: 1,
-    title: "دسته شماره یک",
+    title: "لوازم جانبی دیجیتال",
     attributes: [
       { id: 101, title: "حافظه", unit: "گیگابایت" },
       { id: 102, title: "وزن", unit: "گرم" },
@@ -9,7 +9,7 @@ export const productCategories = [
   },
   {
     id: 2,
-    title: "دسته شماره دو",
+    title: "خانه و آشپزخانه",
     attributes: [
       { id: 201, title: "ابعاد", unit: "سانتی‌متر" },
       { id: 202, title: "تعداد", unit: "عدد" },
@@ -24,30 +24,50 @@ export const productColors = [
   { name: "قرمز", value: "#ef4444" },
 ];
 export const productWarranties = [
-  "گارانتی فلان ۱",
-  "گارانتی فلان ۲",
-  "گارانتی فلان ۳",
+  "گارانتی ۱۸ ماهه شرکتی",
+  "ضمانت اصالت و سلامت فیزیکی کالا",
+  "۷ روز ضمانت بازگشت کالا",
 ];
 
 export const initialProducts = [
   {
     id: 1,
     categoryIds: [1],
-    title: "محصول شماره ۱",
-    price: 20000,
-    weight: 1,
-    brand: "سامسونگ",
+    title: "هدفون بی‌سیم انکر مدل Soundcore Q20i",
+    price: 3480000,
+    weight: 250,
+    brand: "انکر",
     colorNames: ["مشکی"],
-    warranties: ["گارانتی فلان ۱"],
-    description: "توضیحات نمونه محصول",
+    warranties: ["گارانتی ۱۸ ماهه شرکتی"],
+    description: "هدفون دورگوشی با اتصال بی‌سیم، حذف نویز فعال و شارژدهی مناسب استفادهٔ روزانه.",
     imageName: "",
     imageAlt: "",
-    tags: ["نمونه", "پرفروش"],
-    stock: 10,
+    tags: ["هدفون", "بلوتوث"],
+    stock: 6,
+    discount: 5,
+    isActive: true,
+    likes: 18,
+    dislikes: 1,
+    attributeValues: { 101: "بلوتوث", 102: "250" },
+  },
+  {
+    id: 2,
+    categoryIds: [2],
+    title: "ماگ استیل دوجداره ۴۵۰ میلی‌لیتری",
+    price: 725000,
+    weight: 320,
+    brand: "زیبو",
+    colorNames: ["سفید"],
+    warranties: ["ضمانت اصالت و سلامت فیزیکی کالا"],
+    description: "ماگ استیل دوجداره با درِ ضدنشت و ظرفیت مناسب نوشیدنی‌های گرم و سرد.",
+    imageName: "",
+    imageAlt: "",
+    tags: ["ماگ", "استیل"],
+    stock: 3,
     discount: 0,
     isActive: true,
-    likes: 30,
-    dislikes: 10,
-    attributeValues: { 101: "128", 102: "180" },
+    likes: 9,
+    dislikes: 0,
+    attributeValues: { 201: "۸ × ۸ × ۱۷", 202: "۱" },
   },
 ];

@@ -18,9 +18,12 @@ import {
   Leaf,
   ChevronRight,
 } from "lucide-react";
+import { useAuth } from "../../../contexts/auth-context";
 
 export default function Sidebar({ isOpen, onClose, onNavigate }) {
   const [active, setActive] = useState("dashboard_section");
+  const { user } = useAuth();
+  const roleNames = user?.roles?.map((role) => role.title).filter(Boolean);
 
   const groups = [
     {
@@ -151,8 +154,12 @@ export default function Sidebar({ isOpen, onClose, onNavigate }) {
           <span className="absolute bottom-0 left-0 h-2.5 w-2.5 rounded-full border-2 border-brand-dark bg-brand" />
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-white">محمد امین شیرزاد</p>
-          <p className="mt-0.5 truncate text-xs text-white/50">مدیر سیستم</p>
+          <p className="truncate text-sm font-semibold text-white">
+            {user?.name || user?.phone || "کاربر پنل"}
+          </p>
+          <p className="mt-0.5 truncate text-xs text-white/50">
+            {roleNames?.join("، ") || "کاربر"}
+          </p>
         </div>
       </div>
 
